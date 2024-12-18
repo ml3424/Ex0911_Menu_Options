@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     EditText eT1, eT2;
 
     String inputET1_str = "", inputET2_str = "";
-    int inputET1 = 0, inputET2 = 0;
+    double inputET1 = 0, inputET2 = 0, result = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,29 +29,59 @@ public class MainActivity extends AppCompatActivity {
         eT2 = findViewById(R.id.eT2);
     }
 
+    public boolean getInputET()
+    {
+        inputET1_str = eT1.getText().toString();
+        inputET2_str = eT2.getText().toString();
+
+        if(isValidInput(inputET1_str) && isValidInput(inputET2_str))
+        {
+            inputET1 = Double.parseDouble(inputET1_str);
+            inputET2 = Double.parseDouble(inputET2_str);
+            return true;
+        }
+        else
+        {
+            tV_result.setText("Invalid input. Please enter a valid number.");
+            return false;
+        }
+    }
+
+    public boolean isValidInput(String input)
+    {
+        if (input.isEmpty())
+        {
+            return false;
+        }
+        // check if input is a single character and is not a digit
+        else if ((input.length() == 1 || input.length() == 2) && !Character.isDigit(input.charAt(0)))
+        {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu (menu);
     }
 
-
     public boolean onOptionsItemSelected (MenuItem item) {
         int id = item.getItemId();
+        if(!getInputET() && !(id == R.id.menuC))
+        {
+            return false;
+        }
 
         if (id == R.id.menuPlus) {
-            tV_result.setText("%.3f" + (inputET1 + inputET2));
-            return true;
+            result = inputET1 + inputET2;
         }
         else if (id == R.id.menuMinus) {
-            tV_result.setText("%.3f" + (inputET1 - inputET2));
-            return true;
+            result = inputET1 - inputET2;
         }
         else if (id == R.id.menuMul) {
-            tV_result.setText("%.3f" + (inputET1 * inputET2));
-            return true;
+            result = inputET1 * inputET2;
         }
         else if (id == R.id.menuDiv) {
             if(inputET2 == 0)
@@ -59,11 +89,22 @@ public class MainActivity extends AppCompatActivity {
                 tV_result.setText("Error: Division by zero!");
                 return false;
             }
-            tV_result.setText("%.3f" + (inputET1 / inputET2));
+            result = inputET1 / inputET2;
+        }
+        else if (id == R.id.menuC)
+        {
+            tV_result.setText("");
+            eT1.setText("");
+            eT2.setText("");
             return true;
         }
+        else
+        {
+            return false;
+        }
 
-        return false;
+        tV_result.setText(String.format("%9.3f", (result)));
+        return true;
     }
 
 }
