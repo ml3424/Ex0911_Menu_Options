@@ -103,7 +103,12 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        tV_result.setText(String.format("%9.3f", (result)));
+        if(result > 100000000 || result < -100000000)
+        {
+            tV_result.setText("Too big of a number");
+            return false;
+        }
+        tV_result.setText(String.format("%11.3f", (result)));
         return true;
     }
 
